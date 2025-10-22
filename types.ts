@@ -1,3 +1,5 @@
+// types.ts - Central type definitions for ChefCast app
+
 export interface MenuItem {
   id: string;
   name: string;

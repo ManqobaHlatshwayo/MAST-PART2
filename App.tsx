@@ -4,6 +4,15 @@ import SplashScreen from './screens/SplashScreen';
 import HomeScreen from './screens/HomeScreen';
 import AddDishScreen from './screens/AddDishScreen';
 
+/*
+Code Attribution
+Author: Expo Team
+Title: Expo SDK - React Native Framework
+Date Published: 2024
+Link/URL: https://docs.expo.dev/
+Date accessed: 2025-01-20
+*/
+
 // MenuItem interface
 export interface MenuItem {
   id: string;
@@ -13,6 +22,15 @@ export interface MenuItem {
   price: number;
   image?: string;
 }
+
+/*
+Code Attribution
+Author: React Native Community
+Title: React Native - Learn the Basics
+Date Published: 2024
+Link/URL: https://reactnative.dev/docs/getting-started
+Date accessed: 2025-01-20
+*/
 
 type Screen = 'splash' | 'home' | 'addDish';
 
@@ -67,6 +85,15 @@ const INITIAL_DISHES: MenuItem[] = [
     image: 'https://images.unsplash.com/photo-1600891964092-4316c288032e?w=800',
   },
 ];
+
+/*
+Code Attribution
+Author: React Team
+Title: React Hooks - useState
+Date Published: 2024
+Link/URL: https://react.dev/reference/react/useState
+Date accessed: 2025-01-20
+*/
 
 const App: React.FC = () => {
   const [currentScreen, setCurrentScreen] = useState<Screen>('splash');

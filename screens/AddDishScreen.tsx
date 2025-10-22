@@ -1,132 +1,251 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   View,
   Text,
   TextInput,
-  Button,
+  TouchableOpacity,
   StyleSheet,
-  Alert,
   ScrollView,
-} from "react-native";
-import { Picker } from "@react-native-picker/picker";
-import { StackNavigationProp } from "@react-navigation/stack";
-import { RootStackParamList, MenuItem } from "../App";
+  KeyboardAvoidingView,
+  Platform,
+  Alert,
+} from 'react-native';
+import { Picker } from '@react-native-picker/picker';
 
-type AddItemNavProp = StackNavigationProp<RootStackParamList, "AddItem">;
+// Predefined courses
+export const COURSES = ['Breakfast', 'Lunch', 'Dinner', 'Dessert'];
 
-interface Props {
-  navigation: AddItemNavProp;
-  addItem: (item: MenuItem) => void;
+interface AddDishScreenProps {
+  onAddDish: (name: string, description: string, course: string, price: number, imageUrl?: string) => void;
+  onCancel: () => void;
 }
 
-export default function AddItemScreen({ navigation, addItem }: Props) {
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [price, setPrice] = useState("");
-  const [course, setCourse] = useState("");
-  const [image, setImage] = useState("");
+const AddDishScreen: React.FC<AddDishScreenProps> = ({ onAddDish, onCancel }) => {
+  const [dishName, setDishName] = useState('');
+  const [description, setDescription] = useState('');
+  const [selectedCourse, setSelectedCourse] = useState(COURSES[0]);
+  const [price, setPrice] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
 
-  const handleSubmit = () => {
-    if (!name || !description || !price || !course) {
-      Alert.alert("Error", "Please fill in all required fields.");
+  const handleAddDish = () => {
+    // Validation
+    if (!dishName.trim()) {
+      Alert.alert('Error', 'Please enter a dish name');
+      return;
+    }
+    if (!description.trim()) {
+      Alert.alert('Error', 'Please enter a description');
+      return;
+    }
+    if (!price.trim() || isNaN(parseFloat(price)) || parseFloat(price) <= 0) {
+      Alert.alert('Error', 'Please enter a valid price');
       return;
     }
 
-    const newItem: MenuItem = {
-      id: Date.now().toString(),
-      name,
-      description,
-      course,
-      price: parseFloat(price),
-      image:
-        image ||
-        "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800&q=80",
-    };
+    // Call the parent function to add the dish
+    onAddDish(dishName, description, selectedCourse, parseFloat(price), imageUrl.trim() || undefined);
 
-    addItem(newItem);
-    navigation.goBack();
+    // Clear form
+    setDishName('');
+    setDescription('');
+    setSelectedCourse(COURSES[0]);
+    setPrice('');
+    setImageUrl('');
+
+    Alert.alert('Success', 'Dish added to menu!', [
+      { text: 'OK', onPress: onCancel }
+    ]);
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.header}>Add New Dish</Text>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    >
+      <ScrollView style={styles.scrollView}>
+        {/* Header */}
+        <View style={styles.header}>
+          <Text style={styles.headerTitle}>Add New Dish</Text>
+          <Text style={styles.headerSubtitle}>Fill in the details below</Text>
+        </View>
 
-      <TextInput
-        style={styles.input}
-        placeholder="Dish Name"
-        placeholderTextColor="#999"
-        value={name}
-        onChangeText={setName}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Description"
-        placeholderTextColor="#999"
-        value={description}
-        onChangeText={setDescription}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Price (R)"
-        placeholderTextColor="#999"
-        keyboardType="numeric"
-        value={price}
-        onChangeText={setPrice}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Image URL (optional)"
-        placeholderTextColor="#999"
-        value={image}
-        onChangeText={setImage}
-      />
-
-      <View style={styles.pickerContainer}>
-        <Picker
-          selectedValue={course}
-          onValueChange={(val) => setCourse(val)}
-          dropdownIconColor="#1E90FF"
-          style={styles.picker}
-        >
-          <Picker.Item
-            label="-- Select a course --"
-            value=""
-            color="#999"
-            enabled={false}
+        {/* Form Section */}
+        <View style={styles.formSection}>
+          <Text style={styles.label}>Dish Name *</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Enter dish name"
+            value={dishName}
+            onChangeText={setDishName}
+            placeholderTextColor="#999"
           />
-          <Picker.Item label="Starters" value="Starters" color="#fff" />
-          <Picker.Item label="Mains" value="Mains" color="#fff" />
-          <Picker.Item label="Desserts" value="Desserts" color="#fff" />
-        </Picker>
-      </View>
 
-      <Button title="Add Dish" color="#1E90FF" onPress={handleSubmit} />
-    </ScrollView>
+          <Text style={styles.label}>Description *</Text>
+          <TextInput
+            style={[styles.input, styles.textArea]}
+            placeholder="Enter description"
+            value={description}
+            onChangeText={setDescription}
+            multiline
+            numberOfLines={3}
+            placeholderTextColor="#999"
+          />
+
+          <Text style={styles.label}>Course *</Text>
+          <View style={styles.pickerWrapper}>
+            <Picker
+              selectedValue={selectedCourse}
+              onValueChange={(itemValue) => setSelectedCourse(itemValue)}
+              style={styles.picker}
+              dropdownIconColor="#FF6B35"
+              itemStyle={styles.pickerItem}
+            >
+              {COURSES.map((course) => (
+                <Picker.Item key={course} label={course} value={course} />
+              ))}
+            </Picker>
+          </View>
+
+          <View style={styles.spacer} />
+
+          <Text style={styles.label}>Image URL (Optional)</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Paste image URL here"
+            value={imageUrl}
+            onChangeText={setImageUrl}
+            keyboardType="url"
+            placeholderTextColor="#999"
+            autoCapitalize="none"
+          />
+          <Text style={styles.label}>Price (R) *</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Enter price"
+            value={price}
+            onChangeText={setPrice}
+            keyboardType="decimal-pad"
+            placeholderTextColor="#999"
+          />
+
+          {/* Buttons */}
+          <TouchableOpacity style={styles.addButton} onPress={handleAddDish}>
+            <Text style={styles.addButtonText}>Add Dish</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.cancelButton} onPress={onCancel}>
+            <Text style={styles.cancelButtonText}>Cancel</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
-}
+};
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#121212", padding: 20 },
+  container: {
+    flex: 1,
+    backgroundColor: '#f5f5f5',
+  },
+  scrollView: {
+    flex: 1,
+  },
   header: {
-    color: "#fff",
-    fontSize: 24,
-    fontWeight: "bold",
-    textAlign: "center",
-    marginBottom: 20,
+    backgroundColor: '#FF6B35',
+    padding: 20,
+    paddingTop: 50,
+    alignItems: 'center',
+  },
+  headerTitle: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#fff',
+  },
+  headerSubtitle: {
+    fontSize: 14,
+    color: '#FFE5D9',
+    marginTop: 5,
+  },
+  formSection: {
+    backgroundColor: '#fff',
+    margin: 15,
+    padding: 20,
+    borderRadius: 10,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+  },
+  label: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#333',
+    marginBottom: 8,
+    marginTop: 15,
   },
   input: {
     borderWidth: 1,
-    borderColor: "#1E90FF",
-    color: "#fff",
-    padding: 10,
+    borderColor: '#ddd',
     borderRadius: 8,
-    marginBottom: 10,
+    padding: 12,
+    fontSize: 16,
+    backgroundColor: '#f9f9f9',
+    color: '#333',
   },
-  pickerContainer: {
+  textArea: {
+    height: 80,
+    textAlignVertical: 'top',
+  },
+  pickerWrapper: {
     borderWidth: 1,
-    borderColor: "#1E90FF",
+    borderColor: '#ddd',
     borderRadius: 8,
+    backgroundColor: '#f9f9f9',
     marginBottom: 20,
+    height: 55,
   },
-  picker: { color: "#fff" },
+  picker: {
+    height: 55,
+    color: '#333',
+  },
+  pickerItem: {
+    height: 55,
+  },
+  spacer: {
+    height: 20,
+  },
+  addButton: {
+    backgroundColor: '#FF6B35',
+    padding: 15,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginTop: 20,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+  },
+  addButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  cancelButton: {
+    backgroundColor: '#fff',
+    padding: 15,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginTop: 10,
+    borderWidth: 1,
+    borderColor: '#ddd',
+  },
+  cancelButtonText: {
+    color: '#666',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
 });
+
+export default AddDishScreen;
