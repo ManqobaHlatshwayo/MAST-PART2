@@ -12,6 +12,17 @@ import {
 } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 
+/*
+Code Attribution
+Author: React Native Picker Community
+Title: @react-native-picker/picker
+Date Published: 2024
+Link/URL: https://github.com/react-native-picker/picker
+Date accessed: 2025-01-20
+*/
+
+
+
 // Predefined courses
 export const COURSES = ['Breakfast', 'Lunch', 'Dinner', 'Dessert'];
 
@@ -19,6 +30,15 @@ interface AddDishScreenProps {
   onAddDish: (name: string, description: string, course: string, price: number, imageUrl?: string) => void;
   onCancel: () => void;
 }
+
+/*
+Code Attribution
+Author: React Native Community
+Title: TextInput Component
+Date Published: 2024
+Link/URL: https://reactnative.dev/docs/textinput
+Date accessed: 2025-01-20
+*/
 
 const AddDishScreen: React.FC<AddDishScreenProps> = ({ onAddDish, onCancel }) => {
   const [dishName, setDishName] = useState('');
@@ -41,6 +61,15 @@ const AddDishScreen: React.FC<AddDishScreenProps> = ({ onAddDish, onCancel }) =>
       Alert.alert('Error', 'Please enter a valid price');
       return;
     }
+
+/*
+Code Attribution
+Author: React Native Community
+Title: ScrollView Component
+Date Published: 2024
+Link/URL: https://reactnative.dev/docs/scrollview
+Date accessed: 2025-01-20
+*/
 
     // Call the parent function to add the dish
     onAddDish(dishName, description, selectedCourse, parseFloat(price), imageUrl.trim() || undefined);
