@@ -10,32 +10,7 @@ import {
   Alert,
 } from 'react-native';
 
-/*
-Code Attribution
-Author: React Native Community
-Title: FlatList - React Native Component
-Date Published: 2024
-Link/URL: https://reactnative.dev/docs/flatlist
-Date accessed: 2025-01-20
-*/
 
-/*
-Code Attribution
-Author: React Native Community
-Title: TouchableOpacity - Pressable Components
-Date Published: 2024
-Link/URL: https://reactnative.dev/docs/touchableopacity
-Date accessed: 2025-01-20
-*/
-
-/*
-Code Attribution
-Author: React Native Community
-Title: StyleSheet API
-Date Published: 2024
-Link/URL: https://reactnative.dev/docs/stylesheet
-Date accessed: 2025-01-20
-*/
 
 export interface MenuItem {
   id: string;
