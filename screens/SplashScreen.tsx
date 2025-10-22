@@ -6,6 +6,15 @@ import {
   Animated,
 } from 'react-native';
 
+/*
+Code Attribution
+Author: React Team
+Title: useEffect Hook
+Date Published: 2024
+Link/URL: https://react.dev/reference/react/useEffect
+Date accessed: 2025-01-20
+*/
+
 interface SplashScreenProps {
   onFinish: () => void;
 }
@@ -35,6 +44,15 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ onFinish }) => {
       onFinish();
     }, 3000);
 
+/*
+Code Attribution
+Author: React Native Community
+Title: Animated API
+Date Published: 2024
+Link/URL: https://reactnative.dev/docs/animated
+Date accessed: 2025-01-20
+*/
+
     return () => clearTimeout(timer);
   }, []);
 
@@ -60,6 +78,16 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ onFinish }) => {
     </View>
   );
 };
+
+/*
+Code Attribution
+Author: Unsplash
+Title: Free Stock Photos
+Date Published: 2024
+Link/URL: https://unsplash.com/
+Date accessed: 2025-01-20
+Note: Images used in INITIAL_DISHES array
+*/
 
 const styles = StyleSheet.create({
   container: {
