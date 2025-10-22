@@ -21,8 +21,6 @@ Link/URL: https://github.com/react-native-picker/picker
 Date accessed: 2025-01-20
 */
 
-
-
 // Predefined courses
 export const COURSES = ['Breakfast', 'Lunch', 'Dinner', 'Dessert'];
 

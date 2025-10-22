@@ -133,6 +133,15 @@ const App: React.FC = () => {
     setMenuItems(menuItems.filter(item => item.id !== id));
   };
 
+/*
+Code Attribution
+Author: React Native Picker Community
+Title: @react-native-picker/picker
+Date Published: 2024
+Link/URL: https://github.com/react-native-picker/picker
+Date accessed: 2025-01-20
+*/
+
   // Render the appropriate screen
   const renderScreen = () => {
     switch (currentScreen) {
